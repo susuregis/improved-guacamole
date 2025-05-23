@@ -1,0 +1,35 @@
+<div class="sidebar-container">
+  <div class="sidebar-header">
+    <div class="logo">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+  
+  <mat-divider></mat-divider>
+  
+  <div class="sidebar-content">
+    <mat-nav-list>
+      <ng-container *ngFor="let item of menuItems">
+        <a 
+          *ngIf="canShowMenuItem(item)" 
+          mat-list-item 
+          [routerLink]="item.route" 
+          routerLinkActive="active-link">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </div>
+  
+  <mat-divider></mat-divider>
+  
+  <div class="sidebar-footer">
+    <div class="user-info" *ngIf="authService.currentUser">
+      <div class="user-role" [ngClass]="{'admin-role': authService.currentUser.role === 'admin'}">
+        {{ authService.currentUser.role === 'admin' ? 'Administrador' : 'Usuário' }}
+      </div>
+    </div>
+  </div>
+</div>

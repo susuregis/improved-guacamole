@@ -1,0 +1,136 @@
+<h2 mat-dialog-title>Adicionar Novo Pedido</h2>
+<form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-section">
+      <h3>Informações do Cliente</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome do Cliente</mat-label>
+          <input matInput placeholder="Nome completo" formControlName="customerName">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="orderForm.get('customerName')?.hasError('required')">
+            Nome do cliente é obrigatório
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail do Cliente</mat-label>
+          <input matInput placeholder="email@exemplo.com" formControlName="customerEmail">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="orderForm.get('customerEmail')?.hasError('required')">
+            E-mail do cliente é obrigatório
+          </mat-error>
+          <mat-error *ngIf="orderForm.get('customerEmail')?.hasError('email')">
+            Por favor, insira um e-mail válido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status do Pedido</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let status of orderStatuses" [value]="status">
+              {{ translateStatus(status) }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="orderForm.get('status')?.hasError('required')">
+            Status do pedido é obrigatório
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="form-section">
+      <h3>Adicionar Produtos</h3>
+      <div class="form-row form-row-2-col">
+        <mat-form-field appearance="outline">
+          <mat-label>Produto</mat-label>
+          <mat-select formControlName="productId">
+            <mat-option *ngFor="let product of availableProducts" [value]="product.id">
+              {{ product.name }} - {{ formatCurrency(product.price) }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Quantidade</mat-label>
+          <input matInput type="number" min="1" formControlName="quantity">
+          <mat-error *ngIf="orderForm.get('quantity')?.hasError('min')">
+            A quantidade deve ser maior que zero
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <button type="button" mat-raised-button color="primary" (click)="addItemToOrder()" [disabled]="!orderForm.get('productId')?.value">
+          <mat-icon>add_shopping_cart</mat-icon>
+          Adicionar Produto
+        </button>
+      </div>
+    </div>
+
+    <div class="products-table-container" *ngIf="selectedProducts.length > 0">
+      <h3>Produtos no Pedido</h3>
+      <table mat-table [dataSource]="selectedProducts" class="products-table">
+        <!-- Product Column -->
+        <ng-container matColumnDef="product">
+          <th mat-header-cell *matHeaderCellDef>Produto</th>
+          <td mat-cell *matCellDef="let item">{{ item.productName }}</td>
+        </ng-container>
+        
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Qtd</th>
+          <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+        </ng-container>
+        
+        <!-- Unit Price Column -->
+        <ng-container matColumnDef="unitPrice">
+          <th mat-header-cell *matHeaderCellDef>Preço Unit.</th>
+          <td mat-cell *matCellDef="let item">{{ formatCurrency(item.unitPrice) }}</td>
+        </ng-container>
+        
+        <!-- Total Column -->
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let item">{{ formatCurrency(item.quantity * item.unitPrice) }}</td>
+        </ng-container>
+        
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let item">
+            <button mat-icon-button color="warn" (click)="removeItem(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div class="order-total">
+        <strong>Total do Pedido: {{ formatCurrency(totalOrderValue) }}</strong>
+      </div>
+    </div>
+
+    <div *ngIf="selectedProducts.length === 0" class="empty-order-message">
+      <mat-icon>shopping_cart</mat-icon>
+      <p>Adicione produtos ao pedido</p>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" 
+            [disabled]="orderForm.invalid || selectedProducts.length === 0">
+      Criar Pedido
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>Adicionar Novo Produto</h2>
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nome do Produto</mat-label>
+        <input matInput placeholder="Ex: Smartphone XYZ" formControlName="name">
+        <mat-error *ngIf="productForm.get('name')?.hasError('required')">
+          Nome é obrigatório
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput rows="3" placeholder="Ex: Smartphone com câmera de alta resolução" formControlName="description"></textarea>
+        <mat-error *ngIf="productForm.get('description')?.hasError('required')">
+          Descrição é obrigatória
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row form-row-2-col">
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="productForm.get('category')?.hasError('required')">
+          Categoria é obrigatória
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="available">Disponível</mat-option>
+          <mat-option value="out_of_stock">Sem estoque</mat-option>
+          <mat-option value="discontinued">Descontinuado</mat-option>
+        </mat-select>
+        <mat-error *ngIf="productForm.get('status')?.hasError('required')">
+          Status é obrigatório
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row form-row-2-col">
+      <mat-form-field appearance="outline">
+        <mat-label>Preço (R$)</mat-label>
+        <input matInput type="number" step="0.01" min="0" placeholder="Ex: 999.99" formControlName="price">
+        <mat-icon matSuffix>attach_money</mat-icon>
+        <mat-error *ngIf="productForm.get('price')?.hasError('required')">
+          Preço é obrigatório
+        </mat-error>
+        <mat-error *ngIf="productForm.get('price')?.hasError('min')">
+          Preço não pode ser negativo
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Estoque</mat-label>
+        <input matInput type="number" step="1" min="0" placeholder="Ex: 50" formControlName="stock">
+        <mat-icon matSuffix>inventory_2</mat-icon>
+        <mat-error *ngIf="productForm.get('stock')?.hasError('required')">
+          Estoque é obrigatório
+        </mat-error>
+        <mat-error *ngIf="productForm.get('stock')?.hasError('min')">
+          Estoque não pode ser negativo
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>URL da Imagem</mat-label>
+        <input matInput placeholder="URL da imagem do produto" formControlName="imageUrl">
+        <mat-icon matSuffix>image</mat-icon>
+        <mat-hint>Deixe em branco para usar imagem padrão</mat-hint>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">Adicionar Produto</button>
+  </mat-dialog-actions>
+</form>

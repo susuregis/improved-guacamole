@@ -1,0 +1,155 @@
+<div class="dashboard-container">
+  <h1 class="page-title">Painel de Controle</h1>
+  
+  <!-- Cards de estatísticas -->
+  <div class="stats-cards">
+    <mat-card class="stats-card revenue">
+      <mat-card-content>
+        <div class="stats-icon">
+          <mat-icon>payment</mat-icon>
+        </div>
+        <div class="stats-info">
+          <h2>Receita Total</h2>
+          <div class="stats-value">{{ formatCurrency(revenueTotal) }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stats-card orders">
+      <mat-card-content>
+        <div class="stats-icon">
+          <mat-icon>shopping_cart</mat-icon>
+        </div>
+        <div class="stats-info">
+          <h2>Pedidos</h2>
+          <div class="stats-value">{{ totalOrders }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stats-card products">
+      <mat-card-content>
+        <div class="stats-icon">
+          <mat-icon>inventory_2</mat-icon>
+        </div>
+        <div class="stats-info">
+          <h2>Produtos</h2>
+          <div class="stats-value">{{ totalProducts }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stats-card average-order">
+      <mat-card-content>
+        <div class="stats-icon">
+          <mat-icon>trending_up</mat-icon>
+        </div>
+        <div class="stats-info">
+          <h2>Média por Pedido</h2>
+          <div class="stats-value">{{ formatCurrency(revenueTotal / (totalOrders || 1)) }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+    <!-- Gráficos -->
+  <div class="charts-row">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Status dos Pedidos</mat-card-title>
+      </mat-card-header>      
+      <mat-card-content>        
+        <ngx-charts-advanced-pie-chart
+          [results]="orderStatusData"
+          [view]="view"
+          [scheme]="colorScheme"
+          [gradient]="gradient">
+        </ngx-charts-advanced-pie-chart>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Categorias de Produtos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ngx-charts-bar-vertical
+          [results]="productCategoryData"
+          [view]="view"
+          [scheme]="colorScheme"
+          [gradient]="true"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="false"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [showDataLabel]="true"
+          [roundDomains]="true"
+          [animations]="true"
+          [xAxisLabel]="'Categorias'"
+          [yAxisLabel]="'Quantidade'">
+        </ngx-charts-bar-vertical>
+      </mat-card-content>
+    </mat-card>  </div>
+  <!-- Gráficos de Receita -->
+  <div class="charts-row">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Receita por Categoria</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ngx-charts-advanced-pie-chart
+          [results]="revenueByCategoryData"
+          [view]="view"
+          [scheme]="colorScheme"
+          [gradient]="true">
+        </ngx-charts-advanced-pie-chart>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Top 5 Produtos por Receita</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ngx-charts-bar-horizontal
+          [results]="revenueByProductData"
+          [view]="view"
+          [scheme]="colorScheme"
+          [gradient]="true"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="false"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [showDataLabel]="true"
+          [xAxisLabel]="'Receita (R$)'"
+          [yAxisLabel]="'Produto'">
+        </ngx-charts-bar-horizontal>
+      </mat-card-content>
+    </mat-card></div>
+  
+  <div class="chart-row">
+    <mat-card class="chart-card full-width">
+      <mat-card-header>
+        <mat-card-title>Tendência de Vendas e Receita</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>        <ngx-charts-line-chart
+          [results]="orderTimelineData"
+          [view]="[1000, 350]"
+          [scheme]="colorScheme"
+          [legend]="showLegend"
+          [legendPosition]="legendPosition"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [timeline]="true"
+          [autoScale]="true"
+          [xAxisLabel]="'Data'"
+          [yAxisLabel]="'Valor'">
+        </ngx-charts-line-chart>
+      </mat-card-content>
+    </mat-card>
+  </div>
+    <!-- Fim do conteúdo principal -->
+</div>

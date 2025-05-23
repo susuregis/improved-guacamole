@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+
+// Importar variáveis globais
+@import './app/styles/dashboard-variables';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Estilos globais compartilhados
+.card-container {
+  box-shadow: $shadow-sm;
+  border-radius: $border-radius;
+  @include card-hover;
+}
+
+// Classes de status para uso global
+@each $status, $colors in $status-colors {
+  .status-#{$status} {
+    background-color: nth($colors, 1);
+    color: nth($colors, 2);
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-xl;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+}
+
+// Tipografia global
+h1, h2, h3, h4, h5, h6 {
+  color: $text-dark;
+  margin-top: 0;
+}
+
+// Temas de gráficos compartilhados que podem ser usados globalmente
+:root {
+  --chart-color-1: #{$primary-blue};
+  --chart-color-2: #{$primary-green};
+  --chart-color-3: #{$primary-orange};
+  --chart-color-4: #{$primary-purple};
+  --chart-color-5: #{$primary-red};
+}

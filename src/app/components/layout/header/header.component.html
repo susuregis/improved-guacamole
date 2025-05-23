@@ -1,0 +1,28 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <button mat-icon-button (click)="toggleSidenav()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <span class="app-title">Dashboard Administrativo</span>
+  
+  <span class="spacer"></span>
+  
+  <div class="user-menu">
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+      <mat-icon>person</mat-icon>
+      <span *ngIf="authService.currentUser">{{ authService.currentUser.name }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <div class="user-info" *ngIf="authService.currentUser">
+        <div class="user-name">{{ authService.currentUser.name }}</div>
+        <div class="user-email">{{ authService.currentUser.email }}</div>
+        <div class="user-role">{{ authService.currentUser.role === 'admin' ? 'Administrador' : 'Usuário' }}</div>
+      </div>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Sair</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

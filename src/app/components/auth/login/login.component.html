@@ -1,0 +1,48 @@
+<div class="login-container">
+  <mat-card class="login-card animated-form">
+    <mat-card-header class="login-header">
+      <mat-icon class="lock-icon">lock_outline</mat-icon>
+      <mat-card-title>Bem-vindo!</mat-card-title>
+      <mat-card-subtitle>Acesse o Painel Administrativo</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width input-field">
+          <mat-label>Usuário</mat-label>
+          <input matInput formControlName="username" placeholder="Seu nome de usuário" autocomplete="username">
+          <mat-icon matPrefix>person_outline</mat-icon>
+          <mat-error *ngIf="formControls['username'].hasError('required')">
+            Usuário é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width input-field">
+          <mat-label>Senha</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="current-password">
+          <mat-icon matPrefix>vpn_key</mat-icon>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button" aria-label="toggle password visibility">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="formControls['password'].hasError('required')">
+            Senha é obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <button 
+          mat-raised-button 
+          color="primary" 
+          class="full-width login-button" 
+          type="submit" 
+          [disabled]="isLoading || loginForm.invalid">
+          <span *ngIf="!isLoading">Entrar</span>
+          <mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="24"></mat-progress-spinner>
+        </button>
+      </form>
+
+      <div class="login-info demo-credentials">
+        <h3>Credenciais de Demonstração</h3>
+        <p><strong>Admin:</strong> admin / admin123</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

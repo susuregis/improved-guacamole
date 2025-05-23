@@ -1,0 +1,164 @@
+// Importar variáveis globais
+@import '../../../app/styles/dashboard-variables';
+
+.dashboard-container {
+  padding: $spacing-lg;
+  background-color: $bg-light;
+  min-height: calc(100vh - 64px);
+}
+
+.page-title {
+  margin-bottom: $spacing-xl;
+  color: $text-dark;
+  font-size: 28px;
+  font-weight: 600;
+  position: relative;
+  display: inline-block;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 60px;
+    height: 4px;
+    @include gradient(to right, $primary-blue, #00CCFF);
+    border-radius: 2px;
+  }
+}
+
+// Grid layouts
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+// Stats card styling
+.stats-card {
+  min-height: 120px;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  @include card-hover;
+  
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .stats-icon {
+    @include flex-center;
+    width: 60px;
+    height: 60px;
+    border-radius: $border-radius-lg;
+    margin-right: $spacing-md;
+    
+    mat-icon {
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+      color: white;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+    }
+  }
+  
+  .stats-info {
+    h2 {
+      margin: 0;
+      font-size: 14px;
+      color: $text-gray;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .stats-value {
+      font-size: 26px;
+      font-weight: 600;
+      margin-top: $spacing-sm;
+    }
+  }
+}
+
+// Generate color variations for stats cards
+@each $name, $colors in $stats-card-types {
+  $primary: nth($colors, 1);
+  $dark: nth($colors, 2);
+  $bg: nth($colors, 3);
+  
+  .stats-card.#{$name} {
+    @include gradient(to right, #ffffff, #{$bg});
+    
+    .stats-icon {
+      @include gradient(135deg, #{$primary}, #{$dark});
+    }
+    
+    .stats-value {
+      color: #{$dark};
+    }
+  }
+}
+
+// Chart styling
+.chart-card {
+  min-height: 400px;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  @include card-hover;
+  
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+  
+  mat-card-content {
+    @include flex-center;
+    height: 330px;
+    padding: 0 $spacing-md $spacing-md;
+  }
+  
+  mat-card-header {
+    padding: $spacing-md $spacing-md 0;
+    border-bottom: 1px solid $border-light;
+    margin-bottom: $spacing-sm;
+    
+    mat-card-title {
+      color: $text-dark;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Responsive styles
+@media screen and (max-width: $breakpoint-md) {
+  .dashboard-container { padding: $spacing-md; }
+  .charts-row { grid-template-columns: 1fr; }
+  .stats-cards { grid-template-columns: 1fr; }
+  .page-title { font-size: 24px; }
+  .view { width: 100% !important; }
+}
+
+@media screen and (max-width: $breakpoint-sm) {
+  .dashboard-container { padding: $spacing-sm; }
+  .stats-card {
+    .stats-icon {
+      width: 50px;
+      height: 50px;
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+    .stats-info .stats-value { font-size: 20px; }
+  }
+}

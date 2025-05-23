@@ -1,0 +1,89 @@
+// Variáveis globais para estilos do dashboard
+// Arquivo para ser importado nos arquivos SCSS dos componentes
+
+// Cores
+$primary-blue: #3366CC;
+$primary-green: #4CAF50;
+$primary-orange: #FF9800;
+$primary-purple: #9C27B0;
+$primary-red: #D32F2F;
+
+$dark-blue: #1565C0;
+$dark-green: #2E7D32;
+$dark-orange: #E65100;
+$dark-purple: #6A1B9A;
+$dark-red: #B71C1C;
+
+$light-blue: #f5faff;
+$light-green: #f9fff9;
+$light-orange: #fffaf5;
+$light-purple: #faf5ff;
+$light-red: #fff5f5;
+
+$bg-light: #f8f9fa;
+$border-light: #f0f0f0;
+$text-dark: #2c3e50;
+$text-gray: #666;
+
+// Tamanhos
+$border-radius-sm: 4px;
+$border-radius: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+// Sombras
+$shadow-sm: 0 3px 8px rgba(0,0,0,0.08);
+$shadow-md: 0 6px 12px rgba(0,0,0,0.12);
+$shadow-lg: 0 6px 12px rgba(0,0,0,0.15);
+
+// Espaçamentos
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Transições
+$transition-standard: transform 0.2s, box-shadow 0.2s;
+
+// Breakpoints 
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Mixins úteis
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin gradient($direction, $color1, $color2) {
+  background: linear-gradient($direction, $color1, $color2);
+}
+
+@mixin card-hover {
+  transition: $transition-standard;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-md;
+  }
+}
+
+// Status de pedidos
+$status-colors: (
+  'pending': (#FFF8E1, #FF8F00),
+  'processing': (#E3F2FD, #1976D2),
+  'shipped': (#E8F5E9, #388E3C),
+  'delivered': (#E8F5E9, #388E3C),
+  'cancelled': (#FFEBEE, #D32F2F)
+);
+
+// Cartões de estatísticas
+$stats-card-types: (
+  'revenue': ($primary-green, $dark-green, $light-green),
+  'orders': ($primary-blue, $dark-blue, $light-blue),
+  'products': ($primary-orange, $dark-orange, $light-orange),
+  'average-order': ($primary-purple, $dark-purple, $light-purple)
+);

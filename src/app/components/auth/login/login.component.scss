@@ -1,0 +1,117 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #673ab7, #3f51b5); // Deep Purple to Indigo
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25) !important;
+  background-color: white;
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+  text-align: center;
+
+  .lock-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #3f51b5; // Direct color instead of mat-color($mat-indigo, 500)
+    margin-bottom: 10px;
+  }
+
+  mat-card-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  mat-card-subtitle {
+    font-size: 16px;
+    color: #666;
+  }
+}
+
+.input-field {
+  margin-bottom: 20px;
+
+  mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: #757575; // Direct color instead of mat-color($mat-grey, 600)
+  }
+}
+
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 24px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:not([disabled]) {
+    background-color: #3f51b5; // Direct color instead of mat-color($mat-indigo, 500)
+    &:hover {
+      background-color: #303f9f; // Direct color instead of mat-color($mat-indigo, 700)
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  }
+
+  mat-progress-spinner {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+}
+
+.demo-credentials {
+  margin-top: 25px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  text-align: center;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #7986cb; // Direct color instead of mat-color($mat-indigo, 400)
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+  }
+}
+
+// Animation for the form appearing
+.animated-form {
+  animation: fadeInForm 0.6s ease-out forwards;
+}
+
+@keyframes fadeInForm {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

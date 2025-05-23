@@ -1,0 +1,276 @@
+<div class="orders-container">
+  <div class="page-header">
+    <h1 class="page-title">Gestão de Pedidos</h1>
+    <button mat-raised-button color="primary" (click)="openAddOrderDialog()">
+      <mat-icon>add</mat-icon>
+      Novo Pedido
+    </button>
+  </div>
+
+  <div class="filters-container">
+    <mat-card>
+      <mat-card-content>
+        <div class="search-filter">
+          <mat-form-field appearance="outline">
+            <mat-label>Buscar Pedidos</mat-label>
+            <input matInput (keyup)="applySearchFilter($event)" placeholder="ID, nome do cliente, email..." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+        
+        <div class="status-filters">
+          <div class="filter-label">Filtrar por status:</div>
+          <div class="status-chips">
+            <mat-chip-listbox [multiple]="false">
+              <mat-chip-option 
+                [selected]="statusFilter === 'all'"
+                (click)="applyStatusFilter('all')">
+                Todos
+              </mat-chip-option>
+              <mat-chip-option 
+                [selected]="statusFilter === 'pending'"
+                (click)="applyStatusFilter('pending')"
+                class="status-pending-chip">
+                Pendente
+              </mat-chip-option>
+              <mat-chip-option 
+                [selected]="statusFilter === 'processing'"
+                (click)="applyStatusFilter('processing')"
+                class="status-processing-chip">
+                Em processamento
+              </mat-chip-option>
+              <mat-chip-option 
+                [selected]="statusFilter === 'shipped'"
+                (click)="applyStatusFilter('shipped')"
+                class="status-shipped-chip">
+                Enviado
+              </mat-chip-option>
+              <mat-chip-option 
+                [selected]="statusFilter === 'delivered'"
+                (click)="applyStatusFilter('delivered')"
+                class="status-delivered-chip">
+                Entregue
+              </mat-chip-option>
+              <mat-chip-option 
+                [selected]="statusFilter === 'cancelled'"
+                (click)="applyStatusFilter('cancelled')"
+                class="status-cancelled-chip">
+                Cancelado
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="orders-list">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Lista de Pedidos</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="filteredOrders" class="orders-table">
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let order">#{{ order.id }}</td>
+            </ng-container>
+            
+            <!-- Customer Column -->
+            <ng-container matColumnDef="customerName">
+              <th mat-header-cell *matHeaderCellDef>Cliente</th>
+              <td mat-cell *matCellDef="let order">
+                <div class="customer-info">
+                  <span class="customer-name">{{ order.customerName }}</span>
+                  <span class="customer-email">{{ order.customerEmail }}</span>
+                </div>
+              </td>
+            </ng-container>
+            
+            <!-- Date Column -->
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Data</th>
+              <td mat-cell *matCellDef="let order">{{ formatDate(order.createdAt) }}</td>
+            </ng-container>
+            
+            <!-- Total Column -->
+            <ng-container matColumnDef="total">
+              <th mat-header-cell *matHeaderCellDef>Total</th>
+              <td mat-cell *matCellDef="let order">{{ formatCurrency(order.total) }}</td>
+            </ng-container>
+            
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let order">
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ translateStatus(order.status) }}
+                </span>
+              </td>
+            </ng-container>
+            
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Ações</th>
+              <td mat-cell *matCellDef="let order">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="viewOrderDetails(order.id)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>Detalhes</span>
+                  </button>
+                  <button mat-menu-item [matMenuTriggerFor]="statusMenu">
+                    <mat-icon>update</mat-icon>
+                    <span>Atualizar Status</span>
+                  </button>
+                </mat-menu>
+                
+                <mat-menu #statusMenu="matMenu">
+                  <button mat-menu-item (click)="updateOrderStatus(order, 'pending')">
+                    Pendente
+                  </button>
+                  <button mat-menu-item (click)="updateOrderStatus(order, 'processing')">
+                    Em processamento
+                  </button>
+                  <button mat-menu-item (click)="updateOrderStatus(order, 'shipped')">
+                    Enviado
+                  </button>
+                  <button mat-menu-item (click)="updateOrderStatus(order, 'delivered')">
+                    Entregue
+                  </button>
+                  <button mat-menu-item (click)="updateOrderStatus(order, 'cancelled')">
+                    Cancelado
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+            
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr 
+              mat-row 
+              *matRowDef="let row; columns: displayedColumns;"
+              [class.expanded-row]="selectedOrderId === row.id"
+              class="order-row"
+              (click)="viewOrderDetails(row.id)">
+            </tr>
+            
+            <!-- Expanded Content -->
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let order" [attr.colspan]="displayedColumns.length">
+                <div class="order-detail" 
+                     [@detailExpand]="selectedOrderId === order.id ? 'expanded' : 'collapsed'"
+                     *ngIf="selectedOrderId === order.id">
+                  
+                  <div class="order-items">
+                    <h3>Itens do Pedido</h3>
+                    <table class="items-table">
+                      <thead>
+                        <tr>
+                          <th>Produto</th>
+                          <th>Quantidade</th>
+                          <th>Preço Unitário</th>
+                          <th>Subtotal</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of order.items">
+                          <td>{{ item.productName }}</td>
+                          <td>{{ item.quantity }}</td>
+                          <td>{{ formatCurrency(item.unitPrice) }}</td>
+                          <td>{{ formatCurrency(item.quantity * item.unitPrice) }}</td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td colspan="3" class="total-label">Total</td>
+                          <td class="total-value">{{ formatCurrency(order.total) }}</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  
+                  <div class="order-timeline">
+                    <h3>Histórico do Pedido</h3>
+                    <div class="timeline">
+                      <div class="timeline-item">
+                        <div class="timeline-badge">
+                          <mat-icon>check_circle</mat-icon>
+                        </div>
+                        <div class="timeline-content">
+                          <h4>Pedido Criado</h4>
+                          <p>{{ formatDate(order.createdAt) }}</p>
+                        </div>
+                      </div>
+                      <!-- Simulação de histórico - seria substituído por dados reais -->
+                      <div class="timeline-item" *ngIf="order.status !== 'pending'">
+                        <div class="timeline-badge">
+                          <mat-icon>check_circle</mat-icon>
+                        </div>
+                        <div class="timeline-content">
+                          <h4>Em Processamento</h4>
+                          <p>{{ formatDate(order.updatedAt) }}</p>
+                        </div>
+                      </div>
+                      <div class="timeline-item" *ngIf="order.status === 'shipped' || order.status === 'delivered'">
+                        <div class="timeline-badge">
+                          <mat-icon>check_circle</mat-icon>
+                        </div>
+                        <div class="timeline-content">
+                          <h4>Enviado</h4>
+                          <p>{{ formatDate(order.updatedAt) }}</p>
+                        </div>
+                      </div>
+                      <div class="timeline-item" *ngIf="order.status === 'delivered'">
+                        <div class="timeline-badge">
+                          <mat-icon>check_circle</mat-icon>
+                        </div>
+                        <div class="timeline-content">
+                          <h4>Entregue</h4>
+                          <p>{{ formatDate(order.updatedAt) }}</p>
+                        </div>
+                      </div>
+                      <div class="timeline-item" *ngIf="order.status === 'cancelled'">
+                        <div class="timeline-badge cancelled">
+                          <mat-icon>cancel</mat-icon>
+                        </div>
+                        <div class="timeline-content">
+                          <h4>Cancelado</h4>
+                          <p>{{ formatDate(order.updatedAt) }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+            
+            <!-- Expanded Content Row -->
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpanded" class="detail-row"></tr>
+            
+            <!-- No Data Row -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+                <div *ngIf="isLoading; else noOrdersTemplate">
+                  <mat-spinner diameter="40" class="loading-spinner"></mat-spinner>
+                  <p>Carregando pedidos...</p>
+                </div>
+                <ng-template #noOrdersTemplate>
+                  <p>Nenhum pedido encontrado 
+                    <span *ngIf="searchTerm">com os critérios de busca "{{ searchTerm }}"</span>
+                    <span *ngIf="statusFilter !== 'all'">com o status selecionado</span>
+                  </p>
+                </ng-template>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
