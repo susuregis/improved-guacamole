@@ -62,10 +62,7 @@ Este dashboard administrativo foi desenvolvido para fornecer uma interface intui
 - Cadastro e edição de usuários
 - Monitoramento de atividades
 
-### Autenticação e Segurança
-- Login seguro com JWT
-- Guardas de rota para proteção de recursos
-- Diferentes níveis de permissão
+
 
 ## 📋 Pré-requisitos
 
